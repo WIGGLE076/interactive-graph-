@@ -1,0 +1,29 @@
+import pandas as pd
+import plotly.express as px
+
+# Load dataset once
+playersdf = pd.read_csv("wnbadrafts.csv")
+
+# Print out the dataset and check the data (useful for debugging)
+print(playersdf)
+
+# Visualization 1: Interactive Line Chart - Players vs Points
+players_top36 = playersdf[['player', 'team', 'points']].head(36)  # Selecting top 36 players
+fig_line = px.line(players_top36, x='player', y='points', title='Top 36 WNBA Players by Points', markers=True)
+fig_line.show()
+
+# Visualization 2: Players and Teams (Bar Chart)
+fig_bar = px.bar(playersdf, x='team', y='points', title="Points per Team", color='team', barmode='group')
+fig_bar.show()
+
+# Visualization 3: Points Distribution Among Players (Pie Chart)
+fig_pie = px.pie(playersdf, 
+                 names='player',        # Each slice corresponds to a player
+                 values='points',       # Size of the slice corresponds to points
+                 title="Points Distribution Among Players")  # Title for the chart
+fig_pie.show()
+
+# Visualization 4: Total Points by Team (Bar Chart)
+team_points = playersdf.groupby('team')['points'].sum().reset_index()  # Summing points by team
+fig_team_bar = px.bar(team_points, x='team', y='points', title="Total Points by Team", color='team')
+fig_team_bar.show()
